@@ -1,0 +1,60 @@
+!
+hostname switch1
+!
+vlan 10
+ name pc
+vlan 20
+ name printer
+vlan 30
+ name phone
+vlan 40
+ name camera
+vlan 50
+ name laptop
+!
+interface Ethernet1
+ description uplink to switch2
+ switchport mode trunk
+ switchport trunk allowed vlan 10-50
+!
+{% for host in range(1, 4) %}
+interface Ethernet{{ 2 + 1 + host }}
+ description pc1{{ host }}
+ switchport mode access
+ switchport access vlan 10
+!
+{% endfor %}
+{% for host in range(1, 4) %}
+interface Ethernet{{ 2 + 4 + host }}
+ description printer1{{ host }}
+ switchport mode access
+ switchport access vlan 20
+!
+{% endfor %}
+{% for host in range(1, 4) %}
+interface Ethernet{{ 2 + 7 + host }}
+ description phone1{{ host }}
+ switchport mode access
+ switchport access vlan 30
+!
+{% endfor %}
+{% for host in range(1, 4) %}
+interface Ethernet{{ 2 + 10 + host }}
+ description phone1{{ host }}
+ switchport mode access
+ switchport access vlan 40
+!
+{% endfor %}
+{% for host in range(1, 4) %}
+interface Ethernet{{ 2 + 13 + host }}
+ description laptop1{{ host }}
+ switchport mode access
+ switchport access vlan 50
+!
+{% endfor %}
+username admin privilege 15 secret admin
+!
+username admin sshkey file flash:netlab1.pub
+!
+ip ssh key auth enable
+!

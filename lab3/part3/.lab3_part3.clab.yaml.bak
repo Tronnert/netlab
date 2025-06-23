@@ -1,0 +1,453 @@
+name: lab3_part3
+prefix: ""
+
+topology:
+  nodes:
+    router1:
+      kind: ceos
+      image: ceos:4.34.1F
+      startup-config: setup_router1.cfg
+      binds:
+        - netlab1.pub:/mnt/flash/netlab1.pub
+
+    switch1:
+      kind: ceos
+      image: ceos:4.34.1F
+      startup-config: setup_switch1.cfg
+      binds:
+        - netlab1.pub:/mnt/flash/netlab1.pub
+
+    switch2:
+      kind: ceos
+      image: ceos:4.34.1F
+      startup-config: setup_switch2.cfg
+      binds:
+        - netlab1.pub:/mnt/flash/netlab1.pub
+
+    switch3:
+      kind: ceos
+      image: ceos:4.34.1F
+      startup-config: setup_switch3.cfg
+      binds:
+        - netlab1.pub:/mnt/flash/netlab1.pub
+    
+    dhcp-server:
+      kind: linux
+      image: dima/alpine-dhcp:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_dhcp.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+        - dhcpd.conf:/tmp/dhcpd.conf
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - cp /tmp/dhcpd.conf /etc/dhcp/dhcpd.conf
+        - sh /tmp/setup.sh
+        - ip route del default
+        - ip route add default via 10.60.0.254
+
+
+    pc11:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.10.0.1) & exit 0'
+
+    pc12:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.10.0.1) & exit 0'
+
+    pc13:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.10.0.1) & exit 0'
+
+    pc21:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.10.0.1) & exit 0'
+
+    pc22:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.10.0.1) & exit 0'
+
+    pc23:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.10.0.1) & exit 0'
+
+    pc31:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.10.0.1) & exit 0'
+
+    pc32:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.10.0.1) & exit 0'
+
+    pc33:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.10.0.1) & exit 0'
+
+
+    printer11:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_printer.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.20.0.1) & exit 0'
+
+    printer12:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_printer.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.20.0.1) & exit 0'
+
+    printer13:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_printer.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.20.0.1) & exit 0'
+
+    printer21:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_printer.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.20.0.1) & exit 0'
+
+    printer22:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_printer.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.20.0.1) & exit 0'
+
+    printer23:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_printer.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.20.0.1) & exit 0'
+
+    printer31:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_printer.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.20.0.1) & exit 0'
+
+    printer32:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_printer.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.20.0.1) & exit 0'
+
+    printer33:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_printer.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.20.0.1) & exit 0'
+
+
+    phone11:
+      kind: linux
+      image: dima/alpine-phone
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_phone.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.30.0.1; nohup sh /tmp/setup.sh > /tmp/setup.log 2>&1) & exit 0'
+
+    phone12:
+      kind: linux
+      image: dima/alpine-phone
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_phone.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.30.0.1; nohup sh /tmp/setup.sh > /tmp/setup.log 2>&1) & exit 0'
+
+    phone13:
+      kind: linux
+      image: dima/alpine-phone
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_phone.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.30.0.1; nohup sh /tmp/setup.sh > /tmp/setup.log 2>&1) & exit 0'
+
+    phone21:
+      kind: linux
+      image: dima/alpine-phone
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_phone.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.30.0.1; nohup sh /tmp/setup.sh > /tmp/setup.log 2>&1) & exit 0'
+
+    phone22:
+      kind: linux
+      image: dima/alpine-phone
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_phone.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.30.0.1; nohup sh /tmp/setup.sh > /tmp/setup.log 2>&1) & exit 0'
+
+    phone23:
+      kind: linux
+      image: dima/alpine-phone
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_phone.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.30.0.1; nohup sh /tmp/setup.sh > /tmp/setup.log 2>&1) & exit 0'
+
+
+    camera11:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_camera.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.40.0.1) & exit 0'
+
+    camera12:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_camera.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.40.0.1) & exit 0'
+
+    camera13:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_camera.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.40.0.1) & exit 0'
+
+    camera21:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_camera.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.40.0.1) & exit 0'
+
+    camera22:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_camera.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.40.0.1) & exit 0'
+
+    camera23:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_camera.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.40.0.1) & exit 0'
+
+
+    laptop11:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_laptop.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.50.0.1) & exit 0'
+
+
+    laptop12:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_laptop.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.50.0.1) & exit 0'
+
+
+    laptop13:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setup_laptop.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'udhcpc -i eth1 -v -b; (while ! ip a show eth1 | grep -q "inet "; do sleep 1; done; ip route del default; ip route add default via 10.50.0.1) & exit 0'
+
+
+  links:
+    - endpoints: ["router1:eth1","switch2:eth1"]
+    - endpoints: ["switch1:eth1","switch2:eth2"]
+    - endpoints: ["switch3:eth1","switch2:eth3"]
+    - endpoints: ["router1:eth4","dhcp-server:eth1"]
+
+    - endpoints: ["switch1:eth4","pc11:eth1"] 
+    - endpoints: ["switch1:eth5","pc12:eth1"] 
+    - endpoints: ["switch1:eth6","pc13:eth1"] 
+    - endpoints: ["switch2:eth4","pc21:eth1"] 
+    - endpoints: ["switch2:eth5","pc22:eth1"] 
+    - endpoints: ["switch2:eth6","pc23:eth1"] 
+    - endpoints: ["switch3:eth4","pc31:eth1"] 
+    - endpoints: ["switch3:eth5","pc32:eth1"] 
+    - endpoints: ["switch3:eth6","pc33:eth1"] 
+
+    - endpoints: ["switch1:eth7","printer11:eth1"] 
+    - endpoints: ["switch1:eth8","printer12:eth1"] 
+    - endpoints: ["switch1:eth9","printer13:eth1"] 
+    - endpoints: ["switch2:eth7","printer21:eth1"] 
+    - endpoints: ["switch2:eth8","printer22:eth1"] 
+    - endpoints: ["switch2:eth9","printer23:eth1"] 
+    - endpoints: ["switch3:eth7","printer31:eth1"] 
+    - endpoints: ["switch3:eth8","printer32:eth1"] 
+    - endpoints: ["switch3:eth9","printer33:eth1"] 
+
+    - endpoints: ["switch1:eth10","phone11:eth1"] 
+    - endpoints: ["switch1:eth11","phone12:eth1"] 
+    - endpoints: ["switch1:eth12","phone13:eth1"] 
+    - endpoints: ["switch2:eth10","phone21:eth1"] 
+    - endpoints: ["switch2:eth11","phone22:eth1"] 
+    - endpoints: ["switch2:eth12","phone23:eth1"] 
+
+    - endpoints: ["switch1:eth13","camera11:eth1"] 
+    - endpoints: ["switch1:eth14","camera12:eth1"] 
+    - endpoints: ["switch1:eth15","camera13:eth1"] 
+    - endpoints: ["switch2:eth13","camera21:eth1"] 
+    - endpoints: ["switch2:eth14","camera22:eth1"] 
+    - endpoints: ["switch2:eth15","camera23:eth1"] 
+
+    - endpoints: ["switch1:eth16","laptop11:eth1"] 
+    - endpoints: ["switch1:eth17","laptop12:eth1"] 
+    - endpoints: ["switch1:eth18","laptop13:eth1"] 
