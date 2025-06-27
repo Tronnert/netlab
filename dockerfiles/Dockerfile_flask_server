@@ -1,0 +1,5 @@
+FROM alpine:latest
+
+RUN apk update && \
+    apk add openssh tcpdump python3 py3-pip nginx && \
+    pip install flask --break-system-packages

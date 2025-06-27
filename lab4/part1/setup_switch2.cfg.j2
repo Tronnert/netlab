@@ -1,0 +1,96 @@
+!
+hostname switch2
+!
+vlan 10
+ name pc
+vlan 20
+ name printer
+vlan 30
+ name phone
+vlan 40
+ name camera
+vlan 50
+ name laptop
+!
+{# interface Ethernet1
+ description uplink to router1
+ switchport mode trunk
+ switchport trunk allowed vlan 10-50
+! #}
+{# interface Ethernet2
+ description switch1
+ switchport mode trunk
+ switchport trunk allowed vlan 10-50
+! #}
+{# interface Ethernet3
+ description switch3
+ switchport mode trunk
+ switchport trunk allowed vlan 10-50
+! #}
+interface Ethernet1
+ channel-group 1 mode active
+!
+interface Ethernet2
+ channel-group 1 mode active
+!
+interface Port-Channel1
+ description router1
+  switchport mode trunk
+  switchport trunk allowed vlan 10-50
+!
+{% for host in range(1, 4) %}
+interface Ethernet{{2 + 1 + host }}
+ description pc2{{ host }}
+ switchport mode access
+ switchport access vlan 10
+!
+{% endfor %}
+{% for host in range(1, 4) %}
+interface Ethernet{{2 + 4 + host }}
+ description printer2{{ host }}
+ switchport mode access
+ switchport access vlan 20
+!
+{% endfor %}
+{% for host in range(1, 4) %}
+interface Ethernet{{2 + 7 + host }}
+ description phone2{{ host }}
+ switchport mode access
+ switchport access vlan 30
+!
+{% endfor %}
+{% for host in range(1, 4) %}
+interface Ethernet{{2 + 10 + host }}
+ description phone2{{ host }}
+ switchport mode access
+ switchport access vlan 40
+!
+{% endfor %}
+interface Ethernet16
+ description uplink to router1 dup
+ switchport mode trunk
+ switchport trunk allowed vlan 10-50
+!
+interface Ethernet21
+  channel-group 1 mode on
+!
+interface Ethernet22
+  channel-group 1 mode on
+!
+interface Ethernet23
+  channel-group 1 mode on
+!
+interface Ethernet24
+  channel-group 1 mode on
+!
+interface Port-Channel1
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 10-50
+!
+username admin privilege 15 secret admin
+!
+username admin sshkey file flash:netlab1.pub
+!
+ip ssh key auth enable
+!

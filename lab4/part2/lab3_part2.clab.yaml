@@ -1,8 +1,0 @@
-name: lab3_part2
-prexif: ""
-
-topology:
-  nodes:
-    ceos1:
-      kind: ceos
-      image: ceos:4.34.1F
