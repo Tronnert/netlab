@@ -1,5 +1,5 @@
 FROM alpine:latest
 
 RUN apk update && \
-    apk add openssh tcpdump python3 py3-pip nginx && \
+    apk add openssh tcpdump python3 py3-pip nginx openssl && \
     pip install flask --break-system-packages

@@ -1,0 +1,6 @@
+FROM alpine:3.19
+
+RUN apk update && \
+    apk add dhcp vlan openssh tcpdump bind
+    # pip install flask --break-system-packages
+# RUN mkdir myproject && cd myproject && python3 -m venv .venv

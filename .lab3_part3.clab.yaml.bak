@@ -1,0 +1,656 @@
+name: lab3_part3
+prefix: ""
+
+topology:
+  nodes:
+    router1:
+      kind: ceos
+      image: ceos:4.34.1F
+      startup-config: setups/setup_router1.cfg
+      binds:
+        - netlab1.pub:/mnt/flash/netlab1.pub
+
+    switch1:
+      kind: ceos
+      image: ceos:4.34.1F
+      startup-config: setups/setup_switch1.cfg
+      binds:
+        - netlab1.pub:/mnt/flash/netlab1.pub
+
+    switch2:
+      kind: ceos
+      image: ceos:4.34.1F
+      startup-config: setups/setup_switch2.cfg
+      binds:
+        - netlab1.pub:/mnt/flash/netlab1.pub
+
+    switch3:
+      kind: ceos
+      image: ceos:4.34.1F
+      startup-config: setups/setup_switch3.cfg
+      binds:
+        - netlab1.pub:/mnt/flash/netlab1.pub
+    
+    dhcp-dns-server:
+      kind: linux
+      image: dima/alpine-dhcp-dns:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_dhcp.sh:/tmp/setup_dhcp.sh
+        - setups/setup_dns.sh:/tmp/setup_dns.sh
+        - netlab1.pub:/tmp/netlab1.pub
+        - configs/dhcpd.conf:/tmp/dhcpd.conf
+        - configs/named.conf:/tmp/named.conf
+        - configs/db.local.com:/tmp/db.local.com
+        - configs/db.10.10.0:/tmp/db.10.10.0
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh /tmp/setup_dhcp.sh
+        - sh /tmp/setup_dns.sh
+
+    nat-server:
+      kind: linux
+      image: dima/alpine-nat:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_nat.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+    flask-server:
+      kind: linux
+      image: dima/alpine-flask:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_flask.sh:/tmp/setup.sh
+        - configs/nginx.conf:/tmp/nginx.conf
+        - netlab1.pub:/tmp/netlab1.pub
+        - test.py:/tmp/test.py
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+
+
+    pc11:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_pc.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+    pc12:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_pc.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+    pc13:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_pc.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+
+
+    pc21:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_pc.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+    pc22:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_pc.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+    pc23:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_pc.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+
+
+    pc31:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_pc.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+    pc32:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_pc.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+    pc33:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_pc.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+
+
+
+
+    printer11:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_printer.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+    printer12:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_printer.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+    printer13:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_printer.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+
+
+    printer21:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_printer.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+    printer22:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_printer.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+    printer23:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_printer.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+
+
+    printer31:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_printer.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+    printer32:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_printer.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+    printer33:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_printer.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+
+
+
+
+    phone11:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_phone.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+    phone12:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_phone.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+    phone13:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_phone.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+
+
+    phone21:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_phone.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+    phone22:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_phone.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+    phone23:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_phone.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    camera11:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_camera.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+    camera12:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_camera.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+    camera13:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_camera.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+
+
+    camera21:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_camera.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+    camera22:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_camera.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+    camera23:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_camera.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    laptop11:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_laptop.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+    laptop12:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_laptop.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+    laptop13:
+      kind: linux
+      image: dima/alpine-pc:latest
+      binds:
+        - setups/setup_alpine_ssh.sh:/tmp/setup_ssh.sh
+        - setups/setup_ip_dhcp.sh:/tmp/setup_ip.sh
+        - setups/setup_laptop.sh:/tmp/setup.sh
+        - netlab1.pub:/tmp/netlab1.pub
+      exec:
+        - sh /tmp/setup_ssh.sh
+        - sh -c 'nohup sh -c "sh /tmp/setup_ip.sh eth1 && sh /tmp/setup.sh" > /tmp/setup.log 2>&1 &'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  links:
+    - endpoints: ["router1:eth5","switch1:eth1"]
+    - endpoints: ["router1:eth6","switch1:eth2"]
+    - endpoints: ["router1:eth7","switch2:eth1"]
+    - endpoints: ["router1:eth8","switch2:eth2"]
+    - endpoints: ["router1:eth9","switch3:eth1"]
+    - endpoints: ["router1:eth10","switch3:eth2"]
+
+    - endpoints: ["router1:eth1","nat-server:eth2"]
+    - endpoints: ["nat-server:eth1","macvlan:enp3s0f3u1u4"]
+
+    - endpoints: ["flask-server:eth1","switch3:eth20"]
+
+    - endpoints: ["router1:eth4","dhcp-dns-server:eth1"]
+
+
+    - endpoints: ["switch1:eth4","pc11:eth1"] 
+    - endpoints: ["switch1:eth5","pc12:eth1"] 
+    - endpoints: ["switch1:eth6","pc13:eth1"] 
+    - endpoints: ["switch2:eth4","pc21:eth1"] 
+    - endpoints: ["switch2:eth5","pc22:eth1"] 
+    - endpoints: ["switch2:eth6","pc23:eth1"] 
+    - endpoints: ["switch3:eth4","pc31:eth1"] 
+    - endpoints: ["switch3:eth5","pc32:eth1"] 
+    - endpoints: ["switch3:eth6","pc33:eth1"] 
+
+    - endpoints: ["switch1:eth7","printer11:eth1"] 
+    - endpoints: ["switch1:eth8","printer12:eth1"] 
+    - endpoints: ["switch1:eth9","printer13:eth1"] 
+    - endpoints: ["switch2:eth7","printer21:eth1"] 
+    - endpoints: ["switch2:eth8","printer22:eth1"] 
+    - endpoints: ["switch2:eth9","printer23:eth1"] 
+    - endpoints: ["switch3:eth7","printer31:eth1"] 
+    - endpoints: ["switch3:eth8","printer32:eth1"] 
+    - endpoints: ["switch3:eth9","printer33:eth1"] 
+
+    - endpoints: ["switch1:eth10","phone11:eth1"] 
+    - endpoints: ["switch1:eth11","phone12:eth1"] 
+    - endpoints: ["switch1:eth12","phone13:eth1"] 
+    - endpoints: ["switch2:eth10","phone21:eth1"] 
+    - endpoints: ["switch2:eth11","phone22:eth1"] 
+    - endpoints: ["switch2:eth12","phone23:eth1"] 
+
+    - endpoints: ["switch1:eth13","camera11:eth1"] 
+    - endpoints: ["switch1:eth14","camera12:eth1"] 
+    - endpoints: ["switch1:eth15","camera13:eth1"] 
+    - endpoints: ["switch2:eth13","camera21:eth1"] 
+    - endpoints: ["switch2:eth14","camera22:eth1"] 
+    - endpoints: ["switch2:eth15","camera23:eth1"] 
+
+    - endpoints: ["switch1:eth16","laptop11:eth1"] 
+    - endpoints: ["switch1:eth17","laptop12:eth1"] 
+    - endpoints: ["switch1:eth18","laptop13:eth1"] 

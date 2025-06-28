@@ -1,8 +1,0 @@
-# topology documentation: http://containerlab.dev/lab-examples/srl-ceos/
-name: test
-
-topology:
-  nodes:
-    ceos-test:
-      kind: ceos
-      image: ceos:4.34.1F
